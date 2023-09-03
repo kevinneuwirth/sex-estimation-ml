@@ -64,6 +64,9 @@ for (repeated_file in repeated_files) {
 # Calculate the average TEM for each landmark
 tem_per_landmark <- sapply(tem_results, function(tem_list) mean(tem_list, na.rm = TRUE))
 
+# Calculate the median TEM for each landmark
+median_tem_per_landmark <- sapply(tem_results, function(tem_list) median(tem_list, na.rm = TRUE))
+
 # Calculate the minimum TEM for each landmark
 min_tem_per_landmark <- sapply(tem_results, function(tem_list) min(tem_list, na.rm = TRUE))
 
@@ -76,19 +79,22 @@ sd_tem_per_landmark <- sapply(tem_results, function(tem_list) sd(tem_list, na.rm
 # Create a data frame containing the results
 result_table <- data.frame(
   Landmark = names(tem_per_landmark),
-  Mean_TEM = tem_per_landmark,
-  SD_TEM = sd_tem_per_landmark,
-  Min_TEM = min_tem_per_landmark,
-  Max_TEM = max_tem_per_landmark
+  Mean = tem_per_landmark,
+  Median = median_tem_per_landmark,
+  SD = sd_tem_per_landmark,
+  Min = min_tem_per_landmark,
+  Max = max_tem_per_landmark
 )
 
 # Print the table
 print("Summary of TEM per landmark:")
 print(result_table)
 
+# Export the summary table to a CSV file in the original folder
+output_csv_file <- file.path(repeated_measurements_folder, "TEM_Summary.csv")
+write.csv(result_table, file = output_csv_file, row.names = FALSE)
 
 ######## plot generation ########
-
 # Create a histogram for the mean TEM values
 hist(tem_per_landmark, main = "Distribution of Mean TEMs for all Landmarks",
      xlab = "Mean TEM Value", ylab = "Frequency", col = "lightblue", border = "black", breaks = 20)
